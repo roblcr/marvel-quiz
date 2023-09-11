@@ -1,6 +1,7 @@
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import React from 'react'
 import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { auth } from '../Firebase/firebase'
 
 const SignUp = () => {
@@ -14,6 +15,8 @@ const SignUp = () => {
 
     const [loginData, setLoginData] = useState(data)
     const [error, setError] = useState('')
+    const navigate = useNavigate()
+    console.log(navigate)
 
     const handleChange = e => {
         setLoginData({...loginData, [e.target.id]: e.target.value})
@@ -32,6 +35,7 @@ const SignUp = () => {
             setLoginData(data)
             console.log(user);
             // Gérer la réussite de l'inscription, par exemple, rediriger l'utilisateur vers la page de connexion.
+            navigate('/welcome')
           })
           .catch((error) => {
             console.log(error);
@@ -79,6 +83,9 @@ const SignUp = () => {
                         </div>
                         {btn}
                     </form>
+                    <div className="linkContainer">
+                        <Link className='simpleLink' to="/login">Déja inscrit? Connectez-vous !</Link>
+                    </div>
                 </div>
             </div>
         </div>
