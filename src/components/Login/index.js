@@ -31,6 +31,8 @@ const Login = () => {
           })
           .catch((error) => {
             console.log(error);
+            setEmail('')
+            setPassword('')
             setError(error)
           });
       };
@@ -44,6 +46,9 @@ const Login = () => {
         </div>
         <div className="formBoxRight">
             <div className="formContent">
+
+                {error !== '' && <span>{error.message}</span>}
+
                 <h2>Connexion</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="inputBox">
