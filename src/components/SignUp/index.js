@@ -16,7 +16,6 @@ const SignUp = () => {
     const [loginData, setLoginData] = useState(data)
     const [error, setError] = useState('')
     const navigate = useNavigate()
-    console.log(navigate)
 
     const handleChange = e => {
         setLoginData({...loginData, [e.target.id]: e.target.value})
