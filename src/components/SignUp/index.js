@@ -13,6 +13,7 @@ const SignUp = () => {
     }
 
     const [loginData, setLoginData] = useState(data)
+    const [error, setError] = useState('')
 
     const handleChange = e => {
         setLoginData({...loginData, [e.target.id]: e.target.value})
@@ -27,17 +28,14 @@ const SignUp = () => {
         }
       
         createUserWithEmailAndPassword(auth, email, password)
-          .then((userCredential) => {
-            console.log(userCredential);
+          .then((user) => {
+            setLoginData(data)
+            console.log(user);
             // Gérer la réussite de l'inscription, par exemple, rediriger l'utilisateur vers la page de connexion.
           })
           .catch((error) => {
             console.log(error);
-            if (error.code === "auth/email-already-in-use") {
-              alert("Cet e-mail est déjà utilisé. Veuillez utiliser un autre e-mail.");
-            } else {
-              alert("Erreur lors de l'inscription. Veuillez réessayer.");
-            }
+            setError(error)
           });
       };
 
@@ -45,6 +43,9 @@ const SignUp = () => {
 
     const btn = pseudo === '' || email === '' || password === '' || password !== confirmPassword 
     ? <button disabled>Inscription</button> : <button>Inscription</button>
+
+    // gestion des erreurs
+    const errorMsg = error !== '' && <span>{error.message}</span>
 
   return (
     <div className='signUpLoginBox'>
@@ -55,6 +56,7 @@ const SignUp = () => {
             <div className="formBoxRight">
                 <div className="formContent">
                     <form onSubmit={handleSignUp}>
+                        {errorMsg}
                         <h2>Inscription</h2>
                         <div className="inputBox">
                             <input onChange={handleChange} value={pseudo} type='text' id='pseudo' autoComplete='off' required/>
