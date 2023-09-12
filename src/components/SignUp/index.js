@@ -2,7 +2,8 @@ import { createUserWithEmailAndPassword } from 'firebase/auth'
 import React from 'react'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { auth } from '../Firebase/firebase'
+import { auth, db } from '../Firebase/firebase'
+import { addDoc, collection } from 'firebase/firestore'
 
 const SignUp = () => {
 
@@ -30,14 +31,21 @@ const SignUp = () => {
         }
       
         createUserWithEmailAndPassword(auth, email, password)
-          .then((user) => {
+        .then((userCredential) => {
+            const user = userCredential.user;
+    
+            // Enregistrez le pseudo de l'utilisateur dans Firestore
+            const userRef = collection(db, 'users');
+            addDoc(userRef, {
+              uid: user.uid,
+              pseudo: pseudo,
+            });
+
             setLoginData(data)
-            console.log(user);
             // Gérer la réussite de l'inscription, par exemple, rediriger l'utilisateur vers la page de connexion.
             navigate('/welcome')
           })
           .catch((error) => {
-            console.log(error);
             setError(error)
           });
       };
