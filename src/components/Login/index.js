@@ -41,7 +41,7 @@ const Login = () => {
   return (
     <div className='signUpLoginBox'>
       <div className="slContainer">
-        <div className="formBoxLeftSignup">
+        <div className="formBoxLeftLogin">
 
         </div>
         <div className="formBoxRight">
