@@ -39,6 +39,7 @@ const SignUp = () => {
             addDoc(userRef, {
               uid: user.uid,
               pseudo: pseudo,
+              email: email
             });
 
             setLoginData(data)
