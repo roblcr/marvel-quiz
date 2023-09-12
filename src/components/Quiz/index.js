@@ -4,6 +4,7 @@ import ProgessBar from '../ProgressBar'
 import { QuizMarvel } from '../quizMarvel'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import QuizOver from '../QuizOver';
 
 class Quiz extends Component {
 
@@ -18,7 +19,8 @@ class Quiz extends Component {
         btnDisabled: true,
         userAnswer: null,
         score: 0,
-        showWelcomeMsg: false
+        showWelcomeMsg: false,
+        quizEnd: false
     }
 
     storedDataRef = React.createRef()
@@ -87,6 +89,7 @@ class Quiz extends Component {
 
     nextQuestion = () => {
         if (this.state.idQuestion === this.state.maxQuestions - 1) {
+            this.gameOver()
 
         } else {
             this.setState(prevState => ({
@@ -129,6 +132,12 @@ class Quiz extends Component {
         })
     }
 
+    gameOver = () => {
+        this.setState({
+            quizEnd: true
+        })
+    }
+
     render() {
 
         const displayOptions = this.state.options.map((option, index) => {
@@ -141,16 +150,19 @@ class Quiz extends Component {
             )
         })
 
-        return (
-            <div>
+        return this.state.quizEnd ? (
+            <QuizOver />
+        )
+        : (
+            <>
                 <Levels />
                 <ProgessBar />
                 <h2>{this.state.question}</h2>
                 {displayOptions}
                 <button disabled={this.state.btnDisabled} onClick={this.nextQuestion} className="btnSubmit">Suivant</button>
                 <ToastContainer />
-            </div>
-          )
+            </>
+        )
     }
 }
 
