@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import Levels from '../Levels'
 import ProgessBar from '../ProgressBar'
 import { QuizMarvel } from '../quizMarvel'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class Quiz extends Component {
 
@@ -15,7 +17,8 @@ class Quiz extends Component {
         idQuestion: 0,
         btnDisabled: true,
         userAnswer: null,
-        score: 0
+        score: 0,
+        showWelcomeMsg: false
     }
 
     storedDataRef = React.createRef()
@@ -34,6 +37,24 @@ class Quiz extends Component {
 
         } else {
             console.log('pas assez de questions')
+        }
+    }
+
+    showWelcomeMsg = pseudo => {
+        if (!this.state.showWelcomeMsg) {
+
+            this.setState({
+                showWelcomeMsg: true
+            })
+
+            toast.warn(`Bienvenue, ${pseudo} !`, {
+                position: "top-right", // Position du toast
+                autoClose: 3000, // Durée d'affichage en millisecondes (3 secondes)
+                hideProgressBar: false, // Afficher ou masquer la barre de progression
+                closeOnClick: true, // Fermer le toast en cliquant dessus
+                pauseOnHover: false, // Mettre en pause le temps de fermeture lors du survol
+                draggable: true, // Permettre de faire glisser le toast
+              });
         }
     }
 
@@ -57,6 +78,11 @@ class Quiz extends Component {
                 btnDisabled: true
             })
         }
+
+
+        if (this.props.pseudo) {
+            this.showWelcomeMsg(this.props.pseudo)
+        }
     }
 
     nextQuestion = () => {
@@ -73,6 +99,25 @@ class Quiz extends Component {
             this.setState(prevState => ({
                 score: prevState.score + 1
             }))
+
+            toast.success('Bravo !', {
+                position: "top-right", // Position du toast
+                autoClose: 3000, // Durée d'affichage en millisecondes (3 secondes)
+                hideProgressBar: false, // Afficher ou masquer la barre de progression
+                closeOnClick: true, // Fermer le toast en cliquant dessus
+                pauseOnHover: false, // Mettre en pause le temps de fermeture lors du survol
+                draggable: true, // Permettre de faire glisser le toast
+                bodyClassName: 'toastifyColor'
+              });
+        } else {
+            toast.error(`Raté`, {
+                position: "top-right", // Position du toast
+                autoClose: 3000, // Durée d'affichage en millisecondes (3 secondes)
+                hideProgressBar: false, // Afficher ou masquer la barre de progression
+                closeOnClick: true, // Fermer le toast en cliquant dessus
+                pauseOnHover: false, // Mettre en pause le temps de fermeture lors du survol
+                draggable: true, // Permettre de faire glisser le toast
+              });
         }
 
     }
@@ -103,6 +148,7 @@ class Quiz extends Component {
                 <h2>{this.state.question}</h2>
                 {displayOptions}
                 <button disabled={this.state.btnDisabled} onClick={this.nextQuestion} className="btnSubmit">Suivant</button>
+                <ToastContainer />
             </div>
           )
     }
