@@ -5,6 +5,7 @@ import { QuizMarvel } from '../quizMarvel'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import QuizOver from '../QuizOver';
+import { FaChevronRight } from 'react-icons/fa'
 
 class Quiz extends Component {
 
@@ -173,7 +174,9 @@ class Quiz extends Component {
                    className={`answerOptions ${this.state.userAnswer === option ? "selected" : null}`}
                    onClick={() => this.submitAnswer(option)}
                    >
-                    {option}</p>
+                    <FaChevronRight />
+                    {option}
+                    </p>
             )
         })
 
