@@ -8,22 +8,27 @@ import QuizOver from '../QuizOver';
 
 class Quiz extends Component {
 
-    state = {
-        levelNames: ['debutant', 'confirme', 'expert'],
-        quizLevel: 0,
-        maxQuestions: 10,
-        storedQuestions: [],
-        question: null,
-        options: [],
-        idQuestion: 0,
-        btnDisabled: true,
-        userAnswer: null,
-        score: 0,
-        showWelcomeMsg: false,
-        quizEnd: false
-    }
+    constructor(props) {
+      super(props)
+    
+      this.initialState = {
+            levelNames: ['debutant', 'confirme', 'expert'],
+            quizLevel: 0,
+            maxQuestions: 10,
+            storedQuestions: [],
+            question: null,
+            options: [],
+            idQuestion: 0,
+            btnDisabled: true,
+            userAnswer: null,
+            score: 0,
+            showWelcomeMsg: false,
+            quizEnd: false
+        }
 
-    storedDataRef = React.createRef()
+        this.state = this.initialState
+        this.storedDataRef = React.createRef()
+    }
 
     loadQuestions = quizz => {
         const fetchedArrayQuiz = QuizMarvel[0].quizz[quizz]
@@ -42,7 +47,7 @@ class Quiz extends Component {
         }
     }
 
-    showWelcomeMsg = pseudo => {
+    showToastMsg = pseudo => {
         if (!this.state.showWelcomeMsg) {
 
             this.setState({
@@ -65,14 +70,14 @@ class Quiz extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.state.storedQuestions !== prevState.storedQuestions) {
+        if ((this.state.storedQuestions !== prevState.storedQuestions) && this.state.storedQuestions.length) {
             this.setState({
                 question: this.state.storedQuestions[this.state.idQuestion].question,
                 options: this.state.storedQuestions[this.state.idQuestion].options,
             })
         }
 
-        if (this.state.idQuestion !== prevState.idQuestion) {
+        if ((this.state.idQuestion !== prevState.idQuestion) && this.state.storedQuestions.length) {
             this.setState({
                 question: this.state.storedQuestions[this.state.idQuestion].question,
                 options: this.state.storedQuestions[this.state.idQuestion].options,
@@ -82,14 +87,21 @@ class Quiz extends Component {
         }
 
 
-        if (this.props.pseudo) {
-            this.showWelcomeMsg(this.props.pseudo)
+        if (this.props.pseudo !== prevProps.pseudo) {
+            this.showToastMsg(this.props.pseudo)
+        }
+
+        if (this.state.quizEnd !== prevState.quizEnd) {
+            const gradePercent = this.getPercent(this.state.maxQuestions, this.state.score)
+            this.gameOver(gradePercent)
         }
     }
 
     nextQuestion = () => {
         if (this.state.idQuestion === this.state.maxQuestions - 1) {
-            this.gameOver()
+            this.setState({
+                quizEnd: true
+            })
 
         } else {
             this.setState(prevState => ({
@@ -134,22 +146,23 @@ class Quiz extends Component {
 
     getPercent = (maxQuest, ourScore) => (ourScore / maxQuest) * 100
 
-    gameOver = () => {
+    gameOver = percent => {
 
-        const gradePercent = this.getPercent(this.state.maxQuestions, this.state.score)
-
-        if (gradePercent >= 50) {
+        if (percent >= 50) {
             this.setState({
                 quizLevel: this.state.quizLevel + 1,
-                percent: gradePercent,
-                quizEnd: true
+                percent,
             })
         } else {
             this.setState({
-                percent: gradePercent,
-                quizEnd: true
+                percent,
             })
         }
+    }
+
+    loadLevelQuestions = param => {
+        this.setState({...this.initialState, quizLevel: param})
+        this.loadQuestions(this.state.levelNames[param])
     }
 
     render() {
@@ -171,6 +184,7 @@ class Quiz extends Component {
                       maxQuestions={this.state.maxQuestions}
                       quizLevel={this.state.quizLevel}
                       percent={this.state.percent}
+                      loadLevelQuestions={this.loadLevelQuestions}
             />
         )
         : (
