@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { auth } from '../Firebase/firebase'
 import { signOut } from 'firebase/auth'
+import { Tooltip } from 'react-tooltip'
 
 const Logout = () => {
 
@@ -8,7 +9,6 @@ const Logout = () => {
 
     useEffect(() => {
       if (checked) {
-        console.log("deconnexion")
         signOut(auth).then(() => {
         }).catch((error) => {
 
@@ -30,6 +30,7 @@ const Logout = () => {
             checked={checked}
         />
         <span className='slider round'></span>
+        <Tooltip anchorSelect='.switch' place='right' content='Deconnexion'></Tooltip>
       </label>
     </div>
   )
